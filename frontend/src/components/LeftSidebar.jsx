@@ -1,66 +1,53 @@
-import locations from "../data/locations";
+import { ChevronDown, MapPin } from "lucide-react";
+import { LOCATIONS } from "../data/locations";
+import WeatherCard from "./WeatherCard";
+import LayerSelector from "./LayerSelector";
+import LegendCard from "./LegendCard";
 
-export default function LeftSidebar({
-  selectedLocation,
-  setSelectedLocation,
-}) {
+export default function LeftSidebar({ location, onLocationChange, activeLayer, onLayerChange }) {
   return (
-    <div className="w-72 bg-slate-900 border-r border-slate-800 p-5">
-
-      <h2 className="text-xl font-bold mb-6">
-        EarthPulse
-      </h2>
-      <div className="mb-4">
-  <select
-    value={selectedLocation.name}
-    onChange={(e) => {
-      const selected = locations.find(
-        (loc) => loc.name === e.target.value
-      );
-
-      setSelectedLocation(selected);
-    }}
-    className="w-full bg-slate-800 p-3 rounded-lg"
-  >
-    {locations.map((location) => (
-      <option
-        key={location.id}
-        value={location.name}
-      >
-        {location.name}
-      </option>
-    ))}
-  </select>
-</div>
-
-      <div className="bg-slate-800 rounded-xl p-4 mb-4">
-        <h3 className="font-semibold mb-2">
-          Weather
-        </h3>
-
-        <p>🌡 Temp: --°C</p>
-        <p>💧 Humidity: --%</p>
-        <p>💨 Wind: -- km/h</p>
+    <aside className="w-full lg:w-[300px] shrink-0 border-r border-line bg-canvas flex flex-col gap-4 p-4 lg:overflow-y-auto">
+      {/* Location selector */}
+      <div>
+        <label className="text-[11px] uppercase tracking-[0.12em] text-ink-400 mb-2 block">
+          Location
+        </label>
+        <div className="relative">
+          <MapPin
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-500 pointer-events-none"
+          />
+          <select
+            value={location.id}
+            onChange={(e) => onLocationChange(e.target.value)}
+            className="w-full appearance-none panel panel-hover rounded-md pl-9 pr-9 py-2.5 text-[13px] font-medium text-ink-900 outline-none transition-colors cursor-pointer"
+          >
+            {LOCATIONS.map((loc) => (
+              <option key={loc.id} value={loc.id} className="bg-black text-ink-900">
+                {loc.name}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            size={14}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-500 pointer-events-none"
+          />
+        </div>
       </div>
 
-      <div className="bg-slate-800 rounded-xl p-4 mb-4">
-        <h3 className="font-semibold mb-2">
-          Air Quality
-        </h3>
+      <WeatherCard current={location.current} />
 
-        <p>AQI: --</p>
+      <LayerSelector activeLayer={activeLayer} onChange={onLayerChange} />
+
+      <LegendCard activeLayer={activeLayer} />
+
+      <div className="mt-auto pt-2">
+        <div className="divider-line mb-3" />
+        <p className="text-[10.5px] text-ink-300 leading-relaxed">
+          EarthPulse v1.0 — Environmental Intelligence Platform.
+          Data refreshed every 15 minutes from regional sensor networks.
+        </p>
       </div>
-
-      <div className="bg-slate-800 rounded-xl p-4">
-        <h3 className="font-semibold mb-2">
-          Layers
-        </h3>
-
-        <p>☑ Weather</p>
-        <p>☑ AQI</p>
-        <p>☑ Heat</p>
-      </div>
-
-    </div>
+    </aside>
   );
 }
