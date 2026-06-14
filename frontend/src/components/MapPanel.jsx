@@ -10,7 +10,44 @@ const epIcon = L.divIcon({
   iconSize: [14, 14],
   iconAnchor: [7, 7],
 });
+const LAYER_COLORS = {
+  heat: [
+    "#1e40af",
+    "#3b82f6",
+    "#facc15",
+    "#f97316",
+    "#ef4444",
+  ],
 
+  rainfall: [
+    "#bfdbfe",
+    "#60a5fa",
+    "#2563eb",
+    "#1e3a8a",
+  ],
+
+  vegetation: [
+    "#a3e635",
+    "#65a30d",
+    "#15803d",
+    "#14532d",
+  ],
+
+  airquality: [
+    "#22c55e",
+    "#eab308",
+    "#f97316",
+    "#ef4444",
+    "#7e22ce",
+  ],
+
+  flood: [
+    "#93c5fd",
+    "#3b82f6",
+    "#1d4ed8",
+    "#312e81",
+  ],
+};
 // Grayscale intensity ramps per layer (lighter = higher intensity)
 const LAYER_RAMPS = {
   heat: [60, 110, 160, 220],
@@ -22,23 +59,23 @@ const LAYER_RAMPS = {
 
 // Deterministic 5x5 grid of overlay cells around a center point
 function buildGrid(center, layerId, seed = 0) {
-  const ramp = LAYER_RAMPS[layerId];
+  const ramp = LAYER_COLORS[layerId];
   const cellSize = 0.035;
   const cells = [];
   let i = 0;
 
-  for (let row = -2; row <= 2; row++) {
-    for (let col = -2; col <= 2; col++) {
+  for (let row = -5; row <= 5; row++) {
+    for (let col = -5; col <= 5; col++) {
       const lat = center[0] + row * cellSize;
       const lng = center[1] + col * cellSize;
 
       const hash = Math.abs(Math.sin(seed + row * 31.7 + col * 17.3 + i));
-      const gray = ramp[Math.floor(hash * ramp.length)];
+      const color = ramp[Math.floor(hash * ramp.length)];
       const opacity = 0.06 + hash * 0.18;
 
       cells.push({
         id: `${row}-${col}`,
-        color: `rgb(${gray}, ${gray}, ${gray})`,
+        color,
         opacity,
         bounds: [
           [lat - cellSize / 2, lng - cellSize / 2],
