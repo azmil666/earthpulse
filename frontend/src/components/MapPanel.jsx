@@ -1,7 +1,38 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+} from "react-leaflet";
+import { useEffect } from "react";
+import { useMap } from "react-leaflet";
+
 import "leaflet/dist/leaflet.css";
 
-export default function MapPanel() {
+import locations from "../data/locations";
+
+function FlyToLocation({
+  selectedLocation,
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.flyTo(
+      [
+        selectedLocation.lat,
+        selectedLocation.lng,
+      ],
+      13
+    );
+  }, [selectedLocation]);
+
+  return null;
+}
+
+export default function MapPanel({
+  selectedLocation,
+  setSelectedLocation,
+}) {
   return (
     <div className="flex-1">
 
@@ -13,10 +44,33 @@ export default function MapPanel() {
           width: "100%",
         }}
       >
+        <FlyToLocation
+  selectedLocation={selectedLocation}
+/>
+
         <TileLayer
-          attribution='&copy; OpenStreetMap'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+  url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+/>
+
+        {locations.map((location) => (
+          <Marker
+            key={location.id}
+            position={[
+              location.lat,
+              location.lng,
+            ]}
+            eventHandlers={{
+              click: () => {
+                setSelectedLocation(location);
+              },
+            }}
+          >
+            <Popup>
+              {location.name}
+            </Popup>
+          </Marker>
+        ))}
+
       </MapContainer>
 
     </div>
