@@ -18,7 +18,10 @@ export default function Dashboard() {
     try {
       setLoading(true);
 
-      const data = await getEnvironment(location.name);
+      const data = await getEnvironment(
+  location.coords[0],
+  location.coords[1]
+);
 
       setEnvironment(data);
     } catch (err) {

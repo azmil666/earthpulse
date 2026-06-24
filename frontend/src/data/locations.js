@@ -75,7 +75,7 @@ export const LOCATIONS = [
     id: "fort-kochi",
     name: "Fort Kochi",
     coords: [9.9658, 76.2424],
-    zoom: 13,
+    zoom: 15,
     current: {
       temperature: 31.8,
       humidity: 85,
