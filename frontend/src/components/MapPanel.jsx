@@ -1,11 +1,9 @@
 // MapPanel.jsx 
 
-
 import React, {
   useState,
   useEffect,
   useRef,
-  useCallback,
   useMemo,
 } from "react";
 import {
@@ -264,9 +262,8 @@ const LEGEND = {
 };
 
 // ─── Main MapPanel ────────────────────────────────────────────────────────────
-export default function MapPanel() {
-  const [activeLayer,  setActiveLayer]  = useState("heat");
-  const [selectedLoc,  setSelectedLoc]  = useState(null);
+export default function MapPanel({ location, activeLayer }) {
+ 
   const [cellData,     setCellData]     = useState([]);
   const [loadState,    setLoadState]    = useState("idle");
   const [loadProgress, setLoadProgress] = useState({ done: 0, total: 0 });
@@ -295,10 +292,7 @@ export default function MapPanel() {
     return () => { cancelled = true; };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleLocChange = useCallback((e) => {
-    const loc = LOCATIONS.find((l) => l.id === e.target.value);
-    setSelectedLoc(loc || null);
-  }, []);
+  
 
   const pct = loadProgress.total
     ? Math.round((loadProgress.done / loadProgress.total) * 100)
@@ -310,43 +304,7 @@ export default function MapPanel() {
       style={{ fontFamily: "'DM Mono', 'JetBrains Mono', monospace" }}
     >
 
-      {/* ── Top-left: Location selector ── */}
-      <div className="absolute top-3 left-3 z-[1000]">
-        <select
-          onChange={handleLocChange}
-          defaultValue=""
-          className="
-            bg-[#0d1221]/95 border border-white/10 text-white/75 text-[11px]
-            px-3 py-1.5 rounded-md backdrop-blur-sm
-            focus:outline-none focus:border-white/25 cursor-pointer
-          "
-        >
-          <option value="" disabled>— Jump to location —</option>
-          {LOCATIONS.map((l) => (
-            <option key={l.id} value={l.id}>{l.label}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* ── Top-center: Layer selector ── */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000]">
-        <div className="flex gap-1 bg-[#0d1221]/95 border border-white/10 rounded-lg p-1 backdrop-blur-sm">
-          {LAYER_KEYS.map((key) => (
-            <button
-              key={key}
-              onClick={() => setActiveLayer(key)}
-              className={`
-                text-[10px] px-3 py-1 rounded-md transition-all duration-150 tracking-wider uppercase
-                ${activeLayer === key
-                  ? "bg-white/15 text-white font-semibold border border-white/20"
-                  : "text-white/35 hover:text-white/60 hover:bg-white/5"}
-              `}
-            >
-              {LAYERS[key].label}
-            </button>
-          ))}
-        </div>
-      </div>
+    
 
       {/* ── Top-right: Active layer badge ── */}
       <div className="absolute top-3 right-3 z-[1000]">
@@ -473,7 +431,13 @@ export default function MapPanel() {
         />
 
         <ResizeSync />
-        <FlyToHandler target={selectedLoc} />
+        <FlyToHandler
+  target={{
+    id: location.id,
+    lat: location.coords[0],
+    lon: location.coords[1],
+  }}
+/>
         <CoordTracker onMove={setCursorCoords} />
 
         {/* Raster grid — rendered as true rectangles, not interpolated blobs */}
