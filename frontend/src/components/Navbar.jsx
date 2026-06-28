@@ -17,18 +17,7 @@ export default function Navbar() {
         </span>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md border border-line text-[11px] text-ink-500">
-          <span className="w-1.5 h-1.5 rounded-full bg-white" />
-          Live Feed
-        </div>
-        <button className="w-8 h-8 rounded-md border border-line flex items-center justify-center text-ink-500 hover:text-ink-900 hover:border-line-hover transition-colors">
-          <Bell size={14} />
-        </button>
-        <button className="w-8 h-8 rounded-md border border-line flex items-center justify-center text-ink-500 hover:text-ink-900 hover:border-line-hover transition-colors">
-          <Settings size={14} />
-        </button>
-      </div>
+      
     </header>
   );
 }
