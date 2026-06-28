@@ -56,7 +56,19 @@ export default function Dashboard() {
     rainfall:
       environment?.rainfall ??
       location.current.rainfall,
+
+    aqi:
+      environment?.aqi ??
+      location.current.aqi,
+
+    riskScore:
+      environment?.riskScore ??
+      location.current.riskScore,
   },
+
+  alerts:
+    environment?.alerts ??
+    location.alerts,
 };
   console.log(environment);
 
