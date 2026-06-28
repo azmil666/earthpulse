@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     const weather = await axios.get(
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation`,
       {
-        timeout: 5000, // prevents hanging
+        timeout: 10000, // prevents hanging
       }
     );
 
@@ -36,7 +36,10 @@ router.get("/", async (req, res) => {
       longitude,
     });
   } catch (err) {
-    console.error("Environment API Error:", err.message);
+    console.error("Environment API Error:");
+console.error("Message:", err.message);
+console.error("Status:", err.response?.status);
+console.error("Data:", err.response?.data);
 
     // fallback response instead of crashing
     res.json({
